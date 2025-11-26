@@ -116,6 +116,16 @@ input[type="submit"]:hover {
     /* mantiene la fuente original */
 }
 
+.modal-contenido h1,
+.modal-contenido h2 {
+    color: #004080;
+}
+
+.modal-contenido p {
+    color: #333;
+    line-height: 1.6;
+}
+
 /* Botón de cierre */
 .cerrar {
     color: #aaa;

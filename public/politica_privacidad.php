@@ -1,30 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Política de Privacidad y Confidencialidad</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.6;
-            color: #333;
-        }
-        h1, h2 {
-            color: #004080;
-        }
-        a {
-            color: #004080;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-
     <h1>Política de Privacidad y Confidencialidad</h1>
 
     <p>Esta aplicación web está destinada exclusivamente al uso interno del personal autorizado del <strong>Hospital Privado</strong>. Su finalidad es facilitar la gestión administrativa y el acceso a información de contacto de profesionales y entidades colaboradoras.</p>
@@ -55,5 +28,3 @@
 
     <p><a href="index.php">⬅ Volver al inicio de sesión</a></p>
 
-</body>
-</html>

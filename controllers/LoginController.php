@@ -22,6 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuarioInput = htmlspecialchars(trim($_POST['usuario']));
     $claveInput = $_POST['clave'];
 
+    // Validación en el servidor de campos vacíos
+    if (empty($usuarioInput) || empty($claveInput)) {
+        header("Location: ../public/index.php?error=" . urlencode("Debes completar todos los campos."));
+        exit();
+    }
+
     $usuarioModel = new Usuario();
     $user = $usuarioModel->obtenerPorUsuario($usuarioInput);
 
