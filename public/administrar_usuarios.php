@@ -1,6 +1,10 @@
 <?php 
 
 require_once __DIR__ . '/../core/verificar_sesion.php'; 
+require_once __DIR__ . '/../controllers/UsuarioController.php';
+
+$controller = new UsuarioController();
+$usuarios = $controller->listarUsuarios();
 
 if ($_SESSION['tipo'] !== 'admin') {
     header("Location: menu_principal.php?error=" . urlencode("No tienes permisos para acceder."));
@@ -58,7 +62,9 @@ if ($_SESSION['tipo'] !== 'admin') {
                     <tr>
                         <th>ID</th>
                         <th>Usuario</th>
+                        <th>Nombre completo</th>
                         <th>Rol</th>
+                        <th>Fecha de creación</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -68,7 +74,9 @@ if ($_SESSION['tipo'] !== 'admin') {
                         <tr>
                             <td><?= htmlspecialchars($u['id']) ?></td>
                             <td><?= htmlspecialchars($u['usuario']) ?></td>
-                            <td><?= htmlspecialchars($u['rol']) ?></td>
+                            <td><?= htmlspecialchars($u['nombre_completo']) ?></td>
+                            <td><?= htmlspecialchars($u['tipo']) ?></td>
+                            <td><?= htmlspecialchars($u['fecha_creacion']) ?></td>
                             <td>
                                 <button class="boton-accion boton-editar" onclick="editarUsuario(<?= (int)$u['id'] ?>)">✏️ Editar</button>
                                 <button class="boton-accion boton-borrar" onclick="eliminarUsuario(<?= (int)$u['id'] ?>)">🗑️ Eliminar</button>

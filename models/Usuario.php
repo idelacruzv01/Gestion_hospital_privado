@@ -20,6 +20,16 @@ class Usuario {
         error_log("Error al obtener usuario: " . $e->getMessage());
         return false;
     }
-}
+    }
+
+    public function obtenerTodos() {
+    $sql = "SELECT id, usuario, nombre_completo, tipo, fecha_creacion 
+            FROM usuarios 
+            ORDER BY id ASC";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 }
