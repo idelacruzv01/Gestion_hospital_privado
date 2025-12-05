@@ -100,6 +100,9 @@ if ($_SESSION['tipo'] !== 'admin') {
                     <label>Contraseña:</label>
                     <input type="password" name="password" required>
 
+                    <label>Nombre completo:</label>
+                    <input type="text" name="nombre_completo" required>
+
                     <label>Rol:</label>
                     <select name="rol" required>
                         <option value="admin">Administrador</option>
@@ -111,6 +114,7 @@ if ($_SESSION['tipo'] !== 'admin') {
                         <button type="submit" class="boton-accion boton-editar">Guardar</button>
                     </div>
                 </form>
+
             </div>
 
 
@@ -120,6 +124,7 @@ if ($_SESSION['tipo'] !== 'admin') {
             <p>&copy; 2025 Hospital Quirónsalud Toledo</p>
         </footer>
 
+        <script src="js/usuarios.js"></script>
 
     </body>
 </html>

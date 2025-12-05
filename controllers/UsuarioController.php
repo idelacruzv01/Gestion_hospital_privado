@@ -20,9 +20,25 @@ class UsuarioController {
     }
 
     // Crear un nuevo usuario
-    public function crearUsuario($datos) {
-        return $this->usuarioModel->crear($datos);
+    public function crearUsuario() {
+        if (!isset($_POST['usuario'], $_POST['password'], $_POST['nombre_completo'], $_POST['tipo'])) {
+            return ['status' => 'error', 'mensaje' => 'Faltan datos'];
+        }
+
+        $usuario = $_POST['usuario'];
+        $password = $_POST['password'];
+        $nombre_completo = $_POST['nombre_completo'];
+        $rol = $_POST['tipo'];
+
+        $resultado = $this->usuarioModel->crearUsuario($usuario, $password, $nombre_completo, $tipo);
+
+        if ($resultado) {
+            return ['status' => 'ok', 'mensaje' => 'Usuario creado correctamente'];
+        } else {
+            return ['status' => 'error', 'mensaje' => 'Error al crear usuario'];
+        }
     }
+
 
     // Editar usuario existente
     public function actualizarUsuario($id, $datos) {
