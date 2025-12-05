@@ -80,6 +80,19 @@
             </div>
         </section>
 
+    <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin'): ?>
+        <!-- ================= ADMINISTRAR USUARIOS ================= -->
+        <section class="menu-section">
+            <h2 class="menu-title">Administrar Usuarios</h2>
+            <div class="menu-grid">
+                <button class="btn-menu" data-tipo="administrar_usuarios" data-url="administrar_usuarios.php">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Administrar Usuarios</span>
+                </button>
+            </div>
+        </section>
+    <?php endif; ?>
+
         <section id="resultado"></section>
     </main>
 

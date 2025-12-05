@@ -1,0 +1,58 @@
+:root {
+    --quiron-azul: #006778;
+    --quiron-blanco: #ffffff;
+    --quiron-gris-claro: #f4f4f4;
+    --quiron-cian-claro: #eaf6f6;
+}
+
+.acciones-usuarios {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Botón base */
+.boton-accion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--quiron-blanco);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-primario {
+    background-color: var(--quiron-azul);
+}
+
+.boton-primario:hover {
+    background-color: #005566;
+}
+
+/* Botón editar (verde) */
+.boton-editar {
+    background-color: #28a745;
+    /* Verde */
+}
+
+.boton-editar:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Botón borrar (rojo) */
+.boton-borrar {
+    background-color: #dc3545;
+    /* Rojo */
+}
+
+.boton-borrar:hover {
+    background-color: #b52a36;
+    transform: scale(1.05);
+}
