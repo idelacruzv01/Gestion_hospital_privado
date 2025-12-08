@@ -1,24 +1,28 @@
 function guardarUsuario(event) {
-    event.preventDefault();
+    event.preventDefault(); // evita recargar la página
 
-    const form = event.target;
-    const datos = new FormData(form);
-    datos.append("accion", "crear");
+    const formulario = document.getElementById("form-nuevo-usuario");
+    const datos = new FormData(formulario);
+
+    // Añadir la acción al FormData
+    datos.append('accion', 'crear');
 
     fetch("ajax/usuario.php", {
         method: "POST",
         body: datos
     })
-    .then(r => r.json())
-    .then(respuesta => {
-        alert(respuesta.mensaje);
-        if (respuesta.status === "ok") {
-            window.location.reload();
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            alert("Usuario creado correctamente");
+            location.reload(); // recargar la página para actualizar la tabla
+        } else {
+            alert("Error: " + data.mensaje);
         }
     })
-    .catch(error => console.error("Error AJAX:", error));
+    .catch(err => console.error("Error en AJAX:", err));
 }
 
 function mostrarFormularioNuevoUsuario() {
-    document.getElementById("form-nuevo-usuario").style.display = "block";
+    document.getElementById("contenedor-form-nuevo-usuario").style.display = "block";
 }

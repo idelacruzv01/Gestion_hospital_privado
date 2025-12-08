@@ -26,7 +26,7 @@ if ($_SESSION['tipo'] !== 'admin') {
     <body>
         <header class="encabezado">
             <div class="header-left">
-                <a href="menu_principal.php" class="logo">
+                <a href="administrar_usuarios.php" class="logo">
                     <img src="img/logo_header/logo_quiron.png" alt="Logo Quirónsalud" class="logo-header">
                 </a>
             </div>
@@ -90,10 +90,10 @@ if ($_SESSION['tipo'] !== 'admin') {
             </table>
 
             <!-- Formulario oculto para nuevo usuario -->
-            <div id="form-nuevo-usuario" class="form-nueva-aseguradora" style="display:none;">
+            <div id="contenedor-form-nuevo-usuario" class="form-nueva-aseguradora" style="display:none;">
                 <h4>Nuevo Usuario</h4>
 
-                <form onsubmit="guardarUsuario(event)">
+                <form id="form-nuevo-usuario" onsubmit="guardarUsuario(event)">
                     <label>Nombre de usuario:</label>
                     <input type="text" name="usuario" required>
 
@@ -103,8 +103,8 @@ if ($_SESSION['tipo'] !== 'admin') {
                     <label>Nombre completo:</label>
                     <input type="text" name="nombre_completo" required>
 
-                    <label>Rol:</label>
-                    <select name="rol" required>
+                    <label>Tipo (Rol):</label>
+                    <select name="tipo" required>
                         <option value="admin">Administrador</option>
                         <option value="super">Supervisor</option>
                         <option value="user">Empleado</option>
@@ -114,9 +114,7 @@ if ($_SESSION['tipo'] !== 'admin') {
                         <button type="submit" class="boton-accion boton-editar">Guardar</button>
                     </div>
                 </form>
-
             </div>
-
 
         </main>
 

@@ -28,7 +28,7 @@ class UsuarioController {
         $usuario = $_POST['usuario'];
         $password = $_POST['password'];
         $nombre_completo = $_POST['nombre_completo'];
-        $rol = $_POST['tipo'];
+        $tipo = $_POST['tipo'];
 
         $resultado = $this->usuarioModel->crearUsuario($usuario, $password, $nombre_completo, $tipo);
 
