@@ -15,7 +15,19 @@ switch ($accion) {
         $respuesta = $controller->eliminarUsuario($_POST['id']);
         echo json_encode($respuesta);
         break;
-        
+
+    case 'obtener':
+        $id = $_POST['id'] ?? null;
+        $respuesta = $controller->obtenerUsuarioPorId($id);
+        echo json_encode($respuesta);
+        break;
+
+    case 'actualizar':
+        $respuesta = $controller->actualizarUsuario($_POST);
+        echo json_encode($respuesta);
+        break;
+
+
     default:
         echo json_encode(['status' => 'error', 'mensaje' => 'Acción no válida']);
         break;

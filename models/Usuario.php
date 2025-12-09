@@ -69,6 +69,36 @@ class Usuario {
         }
     }
 
+    /*OBTENER UN USUARIO POR ID PARA PODER MODIFICARLO*/
+    public function obtenerPorId($id) {
+        $sql = "SELECT * FROM usuarios WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
+    /*ACTUALIZAR LOS DATOS DE UN USUARIO DEL QUE RECIBIMOS SU ID Y UN ARRAY CON SUS DATOS*/
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE usuarios 
+                    SET usuario = :usuario, 
+                        nombre_completo = :nombre_completo,
+                        tipo = :tipo
+                    WHERE id = :id";
+
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':usuario', $datos['usuario']);
+            $stmt->bindParam(':nombre_completo', $datos['nombre_completo']);
+            $stmt->bindParam(':tipo', $datos['tipo']);
+            $stmt->bindParam(':id', $id);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error al actualizar usuario: " . $e->getMessage());
+            return false;
+        }
+    }
 
 }

@@ -116,6 +116,34 @@ if ($_SESSION['tipo'] !== 'admin') {
                 </form>
             </div>
 
+            <!--Formulario oculto para editar usuario -->
+            <div id="contenedor-form-editar-usuario" class="form-nueva-aseguradora" style="display:none;">
+                <h4>Editar Usuario</h4>
+
+                <form id="form-editar-usuario" onsubmit="guardarCambiosUsuario(event)">
+                    
+                    <input type="hidden" name="id" id="editar-id">
+
+                    <label>Nombre de usuario:</label>
+                    <input type="text" name="usuario" id="editar-usuario" required>
+
+                    <label>Nombre completo:</label>
+                    <input type="text" name="nombre_completo" id="editar-nombre" required>
+
+                    <label>Tipo:</label>
+                    <select name="tipo" id="editar-tipo" required>
+                        <option value="admin">Administrador</option>
+                        <option value="super">Supervisor</option>
+                        <option value="user">Empleado</option>
+                    </select>
+
+                    <div class="acciones">
+                        <button type="submit" class="boton-accion boton-editar">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+
+
         </main>
 
         <footer>

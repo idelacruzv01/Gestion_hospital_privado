@@ -14,11 +14,6 @@ class UsuarioController {
         return $this->usuarioModel->obtenerTodos();
     }
 
-    // Obtiene un usuario concreto (para editar)
-    public function obtenerUsuarioPorId($id) {
-        return $this->usuarioModel->obtenerPorId($id);
-    }
-
     // Crear un nuevo usuario
     public function crearUsuario() {
         if (!isset($_POST['usuario'], $_POST['password'], $_POST['nombre_completo'], $_POST['tipo'])) {
@@ -37,12 +32,6 @@ class UsuarioController {
         } else {
             return ['status' => 'error', 'mensaje' => 'Error al crear usuario'];
         }
-    }
-
-
-    // Editar usuario existente
-    public function actualizarUsuario($id, $datos) {
-        return $this->usuarioModel->actualizar($id, $datos);
     }
 
     // Eliminar usuario
@@ -71,5 +60,40 @@ class UsuarioController {
             ];
         }
     }
+
+    //Obtener un usuario para poder editarlo
+    public function obtenerUsuarioPorId($id) {
+        if (!$id) {
+            return ['status' => 'error', 'mensaje' => 'ID no enviado'];
+        }
+
+        $usuario = $this->usuarioModel->obtenerPorId($id);
+
+        if ($usuario) {
+            return ['status' => 'ok', 'usuario' => $usuario];
+        } else {
+            return ['status' => 'error', 'mensaje' => 'Usuario no encontrado'];
+        }
+    }
+
+    //Editar un usuario ya existente
+    public function actualizarUsuario($datos) {
+
+        if (!isset($datos['id'], $datos['usuario'], $datos['nombre_completo'], $datos['tipo'])) {
+            return ['status' => 'error', 'mensaje' => 'Datos incompletos'];
+        }
+
+        $id = $datos['id'];
+
+        $resultado = $this->usuarioModel->actualizar($id, $datos);
+
+        if ($resultado) {
+            return ['status' => 'ok', 'mensaje' => 'Usuario actualizado correctamente'];
+        } else {
+            return ['status' => 'error', 'mensaje' => 'No se pudo actualizar'];
+        }
+    }
+
+
 
 }
