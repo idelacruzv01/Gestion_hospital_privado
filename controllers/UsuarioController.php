@@ -47,6 +47,29 @@ class UsuarioController {
 
     // Eliminar usuario
     public function eliminarUsuario($id) {
-        return $this->usuarioModel->eliminar($id);
+
+        // Validar que llega un ID correcto
+        if (!isset($id) || empty($id) || !is_numeric($id)) {
+            return [
+                'status' => 'error',
+                'mensaje' => 'ID de usuario no válido.'
+            ];
+        }
+
+        // Llamar al modelo
+        $resultado = $this->usuarioModel->eliminar($id);
+
+        if ($resultado) {
+            return [
+                'status' => 'ok',
+                'mensaje' => 'Usuario eliminado correctamente.'
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'mensaje' => 'No se pudo eliminar el usuario.'
+            ];
+        }
     }
+
 }

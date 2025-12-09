@@ -26,3 +26,26 @@ function guardarUsuario(event) {
 function mostrarFormularioNuevoUsuario() {
     document.getElementById("contenedor-form-nuevo-usuario").style.display = "block";
 }
+
+function eliminarUsuario(id) {
+    if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
+
+    const datos = new FormData();
+    datos.append('accion', 'eliminar');
+    datos.append('id', id);
+
+    fetch("ajax/usuario.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            alert("Usuario eliminado correctamente");
+            location.reload();
+        } else {
+            alert("Error: " + data.mensaje);
+        }
+    })
+    .catch(err => console.error("Error en AJAX:", err));
+}

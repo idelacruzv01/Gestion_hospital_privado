@@ -11,6 +11,11 @@ switch ($accion) {
         echo json_encode($respuesta);
         break;
 
+    case 'eliminar':
+        $respuesta = $controller->eliminarUsuario($_POST['id']);
+        echo json_encode($respuesta);
+        break;
+        
     default:
         echo json_encode(['status' => 'error', 'mensaje' => 'Acción no válida']);
         break;
