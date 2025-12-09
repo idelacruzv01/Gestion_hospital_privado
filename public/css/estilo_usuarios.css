@@ -3,8 +3,112 @@
     --quiron-blanco: #ffffff;
     --quiron-gris-claro: #f4f4f4;
     --quiron-cian-claro: #eaf6f6;
+    --gris-borde: #d9d9d9;
 }
 
+/* CONTENEDOR GENERAL */
+.contenedor-usuarios {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* TABLA */
+.tabla-crud {
+    width: 90%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    background: var(--quiron-blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+}
+
+.tabla-crud th {
+    background: var(--quiron-azul);
+    color: var(--quiron-blanco);
+    padding: 12px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.tabla-crud td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--gris-borde);
+}
+
+.tabla-crud tr:nth-child(even) {
+    background: var(--quiron-cian-claro);
+}
+
+.tabla-crud tr:hover {
+    background: #d6f0f0;
+}
+
+/* ACCIONES EN TABLA */
+.tabla-crud .boton-accion {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+}
+
+/* CONTENEDOR FORMULARIOS */
+#contenedor-form-nuevo-usuario,
+#contenedor-form-editar-usuario {
+    width: 90%;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: var(--quiron-cian-claro);
+    border-radius: 12px;
+    border: 1px solid var(--gris-borde);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* TÍTULO FORMULARIOS */
+#contenedor-form-nuevo-usuario h4,
+#contenedor-form-editar-usuario h4 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--quiron-azul);
+}
+
+/* INPUTS FORMULARIO */
+#contenedor-form-nuevo-usuario input,
+#contenedor-form-nuevo-usuario select,
+#contenedor-form-editar-usuario input,
+#contenedor-form-editar-usuario select {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--quiron-blanco);
+}
+
+/* LABELS */
+#contenedor-form-nuevo-usuario label,
+#contenedor-form-editar-usuario label {
+    font-weight: bold;
+    color: var(--quiron-azul);
+}
+
+/* BOTONES EN FORMULARIO */
+.acciones {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.acciones button {
+    width: 50%;
+}
+
+/* ESTILOS EXISTENTES (BOTONES) */
 .acciones-usuarios {
     display: flex;
     justify-content: center;
@@ -12,7 +116,6 @@
     margin-top: 1rem;
 }
 
-/* Botón base */
 .boton-accion {
     display: inline-flex;
     align-items: center;
@@ -29,16 +132,15 @@
 
 .boton-primario {
     background-color: var(--quiron-azul);
+    margin-bottom: 20px;
 }
 
 .boton-primario:hover {
     background-color: #005566;
 }
 
-/* Botón editar (verde) */
 .boton-editar {
     background-color: #28a745;
-    /* Verde */
 }
 
 .boton-editar:hover {
@@ -46,10 +148,8 @@
     transform: scale(1.05);
 }
 
-/* Botón borrar (rojo) */
 .boton-borrar {
     background-color: #dc3545;
-    /* Rojo */
 }
 
 .boton-borrar:hover {
