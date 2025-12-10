@@ -1,0 +1,163 @@
+:root {
+    --quiron-azul: #006778;
+    --quiron-blanco: #ffffff;
+    --quiron-gris-claro: #f4f4f4;
+    --quiron-cian-claro: #eaf6f6;
+}
+
+/*ESTILO INPUT DEL BUSCADOR*/
+.buscador {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    background-color: #d2e9f3;
+}
+
+.buscador input {
+    width: 90%;
+    max-width: 500px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/*BOTONES MENÚ PRINCIPAL DE URGENCIAS*/
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.btn-menu {
+    background-color: var(--quiron-azul);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 150px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    color: var(--quiron-blanco);
+}
+
+.btn-menu i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--quiron-blanco);
+}
+
+.btn-menu:hover {
+    transform: scale(1.05);
+    background-color: #002627;
+}
+
+/*LISTADO DE ASEGURADORAS*/
+.grid-aseguradoras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.aseguradora {
+    background-color: var(--quiron-blanco);
+    border: 2px solid var(--quiron-azul);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s;
+    height: 120px;
+    min-width: 180px;
+}
+
+.aseguradora:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+}
+
+.aseguradora img.logo {
+    width: 100px;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 2rem;
+    display: block;
+}
+
+.aseguradora span {
+    font-size: 1rem;
+    color: var(--quiron-azul);
+    margin-top: auto;
+}
+
+/*CABECERA DE CADA ASEGURADORA*/
+.cabecera-aseguradora {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo-seleccionado {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.cabecera-aseguradora h2 {
+    font-size: 1.5rem;
+    color: #006778;
+}
+
+.cabecera-aseguradora h2 span {
+    font-weight: bold;
+    color: #333;
+}
+
+/*BOTONES DE OPCIONES DENTRO DE CADA ASEGURADORA*/
+.opciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.btn-opcion {
+    background-color: var(--quiron-azul);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    color: var(--quiron-blanco);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 120px;
+}
+
+.btn-opcion i {
+    font-size: 1.8rem;
+    color: var(--quiron-blanco);
+}
+
+.btn-opcion:hover {
+    background-color: #002627;
+    transform: translateY(-3px);
+}
