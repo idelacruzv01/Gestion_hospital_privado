@@ -86,6 +86,8 @@
             </section>
 
             <section id="resultado"></section>
+            <!--AQUÍ SE CARGAN LOS BOTONES DE LAS OPCIONES PARA CADA RESULTADO DE ASEGURADORA SELECCIONADA-->
+            <section id="resultado-opcion"></section>
         </main>
 
         <footer>

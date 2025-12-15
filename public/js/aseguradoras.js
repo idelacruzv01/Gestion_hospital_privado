@@ -9,20 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function limpiarBloquesDinamicos() {
-        const bloques = document.querySelectorAll(`
-            .bloque-contacto,
-            .bloque-protocolo,
-            .bloque-antigeno,
-            .bloque-tac,
-            .bloque-ingresos,
-            .bloque_traslado_hospitalario,
-            .bloque_traslado_domicilio,
-            .bloque-incidencias,
-            .acciones
-        `);
-        bloques.forEach((b) => b.remove());
+        const contenedor = document.getElementById("resultado-opcion");
+        if (contenedor) {
+            contenedor.innerHTML = "";
+        }
     }
-
 
     /* ================================
        MENÚ PRINCIPAL: CARGA DE ASEGURADORAS
@@ -80,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
             { texto: "ingresos", icono: "fas fa-file-signature", label: "Autorización de Ingreso" },
             { texto: "traslado_hospitalario", icono: "fas fa-hospital-alt", label: "Traslado a otro centro" },
             { texto: "traslado_domicilio", icono: "fas fa-house-medical", label: "Traslado a domicilio" },
-            { texto: "incidencias", icono: "fas fa-triangle-exclamation", label: "Incidencias" },
         ];
 
         let html = `
@@ -93,16 +83,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         opciones.forEach((op) => {
             html += `
-                <button class="btn-opcion" data-opcion="${op.texto}" data-id="${id}">
+                <button class="btn-opcion"
+                        data-opcion="${op.texto}"
+                        data-id="${id}">
                     <i class="${op.icono}"></i>
                     <span>${op.label}</span>
-                </button>`;
+                </button>
+            `;
         });
 
         html += `</div>`;
 
         document.getElementById("resultado").innerHTML = html;
+
+        // Limpia SOLO el contenido de la opción
+        limpiarBloquesDinamicos();
     }
+
+
 
 
     /* ================================
@@ -122,15 +120,23 @@ document.addEventListener("DOMContentLoaded", function () {
         limpiarBloquesDinamicos();
 
         fetch(`ajax/opcion.php?id=${id}&opcion=${encodeURIComponent(opcion)}`)
-            .then((response) => response.text())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Respuesta no válida del servidor");
+                }
+                return response.text();
+            })
             .then((data) => {
-                const contenedor = document.querySelector(".opciones");
-                contenedor.insertAdjacentHTML("afterend", data);
+                const contenedor = document.getElementById("resultado-opcion");
+                if (!contenedor) return;
+                contenedor.innerHTML = data;
             })
             .catch((error) =>
                 console.error(`Error al cargar los datos de ${opcion}:`, error)
             );
     }
+
+
 
 
     /* ================================

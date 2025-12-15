@@ -161,3 +161,38 @@
     background-color: #002627;
     transform: translateY(-3px);
 }
+
+/*ESTILO DE LOS RESULTADOS DE LAS OPCIONES*/
+.bloque-opcion {
+    background-color: #f2f7f8;
+    border: 1px solid #d2e3e5;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 2rem auto;
+    max-width: 700px;
+}
+
+.bloque-opcion h3 {
+    color: var(--quiron-azul);
+    margin-bottom: 1rem;
+}
+
+.bloque-opcion h4 {
+    margin-top: 1rem;
+    color: #333;
+}
+
+/* Clases específicas (por si necesitas ajustes futuros) */
+.bloque-contacto {}
+
+.bloque-protocolo-urgencias {}
+
+.bloque-antigeno {}
+
+.bloque-tac {}
+
+.bloque-ingresos {}
+
+.bloque-traslado-hospitalario {}
+
+.bloque-traslado-domicilio {}
