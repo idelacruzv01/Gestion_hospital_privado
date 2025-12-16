@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* ================================
-       FUNCIONES BÁSICAS
-    ================================== */
+    /* FUNCIONES BÁSICAS */
 
     function limpiarBloquesAseguradoras() {
         document.getElementById("resultado").innerHTML = "";
@@ -15,9 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    /* ================================
-       MENÚ PRINCIPAL: CARGA DE ASEGURADORAS
-    ================================== */
+    /* MENÚ PRINCIPAL: CARGA DE ASEGURADORAS */
 
     document.querySelectorAll(".btn-menu").forEach((boton) => {
         boton.addEventListener("click", function () {
@@ -42,9 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* ================================
-       ACTIVAR CLICS EN ASEGURADORAS LISTADAS
-    ================================== */
+    /* ACTIVAR CLICS EN ASEGURADORAS LISTADAS */
 
     function activarClicksEnAseguradoras() {
         document.querySelectorAll(".aseguradora").forEach((item) => {
@@ -58,9 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* ================================
-       MOSTRAR LAS OPCIONES DE UNA ASEGURADORA
-    ================================== */
+    /* MOSTRAR LAS OPCIONES DE UNA ASEGURADORA */
 
     function mostrarOpciones(nombre, logo, id) {
         const opciones = [
@@ -103,9 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    /* ================================
-       CARGAR CONTENIDO DE CADA OPCIÓN
-    ================================== */
+    /* CARGAR CONTENIDO DE CADA OPCIÓN */
 
     document.addEventListener("click", function (e) {
         if (e.target.closest(".btn-opcion")) {
@@ -139,9 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    /* ================================
-       BUSCADOR DE ASEGURADORAS
-    ================================== */
+    /* BUSCADOR DE ASEGURADORAS */
 
     const buscador = document.getElementById("buscarAseguradora");
 
@@ -163,19 +151,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch((error) => console.error("Error en la búsqueda:", error));
         });
     }
-
-
-    /* ================================
-       MENÚ EN ACORDEÓN (si lo usas)
-    ================================== */
-
-    document.querySelectorAll('.menu-section').forEach(section => {
-        const title = section.querySelector('.menu-title');
-        const grid = section.querySelector('.menu-grid');
-
-        title.addEventListener('click', () => {
-            grid.classList.toggle('show');
-        });
-    });
 
 });

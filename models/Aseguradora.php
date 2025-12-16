@@ -34,7 +34,7 @@ class Aseguradora {
         $database = new Database();
         $conn = $database->getConnection();
 
-        // Buscar en todas las aseguradoras (ajustar tabla si es necesario)
+        // Busca en todas las aseguradoras 
         $sql = "SELECT s.id, s.nombre, s.logo
                 FROM seguros_salud s
                 JOIN tipos_aseguradora t ON s.tipo_aseguradora_id = t.id

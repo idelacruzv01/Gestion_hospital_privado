@@ -69,10 +69,6 @@
                     <i class="fas fa-address-book"></i>
                     <span>Listado de teléfonos</span>
                 </button>
-                <button class="btn-menu" data-tipo="internacional" data-url="menu_internacional.php">
-                    <i class="fas fa-globe"></i>
-                    <span>Internacional</span>
-                </button>
                 <button class="btn-menu" data-tipo="trafico" data-url="menu_trafico.php">
                     <i class="fas fa-car"></i>
                     <span>Tráfico</span>
