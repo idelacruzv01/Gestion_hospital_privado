@@ -8,6 +8,7 @@
         <title>Buscador Precios Privados</title>
         <link rel="stylesheet" href="css/estilo_menu.css">
         <link rel="stylesheet" href="css/estilo_urgencias.css">
+        <link rel="stylesheet" href="css/estilo_usuarios.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
 

@@ -1,4 +1,4 @@
-<table class="tabla-aseguradoras">
+<table class="tabla-crud">
     <thead>
         <tr>
             <?php foreach ($config['cabeceras'] as $cabecera): ?>
