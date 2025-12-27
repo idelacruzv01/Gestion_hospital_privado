@@ -1,9 +1,63 @@
 <?php
-
 require_once __DIR__ . '/../../controllers/AseguradoraController.php';
 
 $controller = new AseguradoraController();
 
+/*
+|--------------------------------------------------------------------------
+| PETICIONES POST (CRUD)
+|--------------------------------------------------------------------------
+*/
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $accion = $_POST['accion'] ?? null;
+
+    switch ($accion) {
+
+        case 'crear':
+            $respuesta = $controller->crearAseguradora();
+            echo json_encode($respuesta);
+            break;
+
+        case 'crear_protocolo_urgencias':
+            $respuesta = $controller->crearProtocoloUrgencias($_POST);
+            echo json_encode($respuesta);
+            break;
+
+
+        /*case 'eliminar':
+            $id = $_POST['id'] ?? null;
+            $respuesta = $controller->eliminarAseguradora($id);
+            echo json_encode($respuesta);
+            break;
+
+        case 'obtener':
+            $id = $_POST['id'] ?? null;
+            $respuesta = $controller->obtenerAseguradoraPorId($id);
+            echo json_encode($respuesta);
+            break;
+
+        case 'actualizar':
+            $respuesta = $controller->actualizarAseguradora($_POST);
+            echo json_encode($respuesta);
+            break;*/
+
+        default:
+            echo json_encode([
+                'status'  => 'error',
+                'mensaje' => 'Acción no válida'
+            ]);
+            break;
+    }
+
+    exit;
+}
+
+/*
+|--------------------------------------------------------------------------
+| PETICIONES GET (búsqueda / filtrado)
+|--------------------------------------------------------------------------
+*/
 $buscar = $_GET['buscar'] ?? null;
 $tipo   = $_GET['tipo']   ?? null;
 

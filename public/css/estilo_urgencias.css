@@ -59,6 +59,11 @@
     background-color: #002627;
 }
 
+.btn-menu-editar {
+    background-color: #a89008;
+    border: 2px solid black;
+}
+
 /*LISTADO DE ASEGURADORAS*/
 .grid-aseguradoras {
     display: grid;

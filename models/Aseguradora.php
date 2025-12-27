@@ -2,6 +2,20 @@
 require_once __DIR__ . '/../core/Database.php';
 
 class Aseguradora {
+
+    public static function obtenerTodas() {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "SELECT id, nombre
+                FROM seguros_salud
+                ORDER BY nombre ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function obtenerPorTipo($tipo) {
     $tiposValidos = ['salud', 'accidentes', 'mutuas', 'privados', 'internacional', 'trafico'];
 
@@ -56,4 +70,59 @@ class Aseguradora {
         $stmt = $conn->query("SELECT id, nombre, tipo_aseguradora_id AS tipo FROM seguros_salud ORDER BY nombre");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /*Crear nueva aseguradora*/
+    public function crearAseguradora($datos)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "INSERT INTO seguros_salud 
+                (nombre, telefono, horario, mail1, mail2, tipo_aseguradora_id)
+                VALUES (:nombre, :telefono, :horario, :mail1, :mail2, :tipo)";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->execute([
+            ':nombre'   => $datos['nombre'],
+            ':telefono' => $datos['telefono'],
+            ':horario'  => $datos['horario'],
+            ':mail1'    => $datos['mail1'],
+            ':mail2'    => $datos['mail2'],
+            ':tipo'     => $datos['tipo']
+        ]);
+
+        return [
+            'status' => 'ok',
+            'id'     => $conn->lastInsertId()
+        ];
+    }
+
+
+    /*Se añaden los datos del protocolo de urgencias a la bbdd*/
+    public function insertarProtocoloUrgencias($datos)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "INSERT INTO protocolos_urgencias 
+                (aseguradora_id, codigo_general, codigo_pediatria, terminal, instrucciones)
+                VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            $datos['aseguradora_id'],
+            $datos['codigo_general'],
+            $datos['codigo_pediatria'],
+            $datos['terminal'],
+            $datos['instrucciones']
+        ]);
+
+        return [
+            'status' => 'ok',
+            'id'     => $conn->lastInsertId()
+        ];
+    }
+
+
 }

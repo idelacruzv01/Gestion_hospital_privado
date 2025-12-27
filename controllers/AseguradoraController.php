@@ -3,6 +3,12 @@ require_once __DIR__ . '/../models/Aseguradora.php';
 
 class AseguradoraController
 {
+    private $aseguradoraModel;
+
+    public function __construct() {
+        $this->aseguradoraModel = new Aseguradora();
+    }
+
     public function mostrarAseguradorasPorTipo($tipo)
     {
         $tipo = trim($tipo);
@@ -34,4 +40,58 @@ class AseguradoraController
 
         require __DIR__ . '/../views/aseguradoras_busqueda.php';
     }
+
+    // Obtener lista de aseguradoras para editar-aseguradoras.php
+    public function listarAseguradoras() {
+        return $this->aseguradoraModel->obtenerTodas();
+    }
+
+    //Crear una nueva aseguradora desde editar-aseguradoras.php
+    public function crearAseguradora()
+    {
+        $campos = ['nombre', 'telefono', 'horario', 'mail1', 'mail2', 'tipo'];
+
+        foreach ($campos as $campo) {
+            if (empty($_POST[$campo])) {
+                return [
+                    'status' => 'error',
+                    'mensaje' => 'Faltan datos obligatorios'
+                ];
+            }
+        }
+
+        $datos = [
+            'nombre'   => trim($_POST['nombre']),
+            'telefono' => trim($_POST['telefono']),
+            'horario'  => trim($_POST['horario']),
+            'mail1'    => trim($_POST['mail1']),
+            'mail2'    => trim($_POST['mail2']),
+            'tipo'     => (int) $_POST['tipo']
+        ];
+
+        $resultado = $this->aseguradoraModel->crearAseguradora($datos); 
+
+        if ($resultado['status'] === 'ok') {
+            return $resultado; // devuelve status + id
+        }
+
+        return [
+            'status' => 'error',
+            'mensaje' => 'Error al crear la aseguradora'
+        ];
+    }
+
+    //SE AÑADEN LOS DATOS DEL PROTOCOLO DE URGENCIAS
+    public function crearProtocoloUrgencias($datos)
+    {
+        return $this->aseguradoraModel->insertarProtocoloUrgencias([
+            'aseguradora_id'   => $datos['aseguradora_id'],
+            'codigo_general'   => $datos['codigo_general'] ?: null,
+            'codigo_pediatria' => $datos['codigo_pediatria'] ?: null,
+            'terminal'         => $datos['terminal'],
+            'instrucciones'    => $datos['instrucciones']
+        ]);
+    }
+
+
 }

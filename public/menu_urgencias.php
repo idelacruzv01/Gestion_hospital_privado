@@ -76,10 +76,11 @@
                 <!--SOLO LOS SUPERVISORES PUEDEN MODIFICAR LOS DATOS DE LAS ASEGURADORAS-->
                 <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'super'): ?>
                 
-                <button class="btn-menu" data-tipo="editar-aseguradoras">
+                <button class="btn-menu btn-menu-editar" data-url="editar-aseguradoras.php">  
                     <i class="fas fa-pencil-alt"></i>
-                    <span>Editar Aseguradora</span>
+                    <span>Editar Aseguradoras</span>
                 </button>
+
                 
                 <?php endif; ?>
                 
