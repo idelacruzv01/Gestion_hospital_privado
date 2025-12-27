@@ -98,31 +98,4 @@ class Aseguradora {
         ];
     }
 
-
-    /*Se añaden los datos del protocolo de urgencias a la bbdd*/
-    public function insertarProtocoloUrgencias($datos)
-    {
-        $database = new Database();
-        $conn = $database->getConnection();
-
-        $sql = "INSERT INTO protocolos_urgencias 
-                (aseguradora_id, codigo_general, codigo_pediatria, terminal, instrucciones)
-                VALUES (?, ?, ?, ?, ?)";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            $datos['aseguradora_id'],
-            $datos['codigo_general'],
-            $datos['codigo_pediatria'],
-            $datos['terminal'],
-            $datos['instrucciones']
-        ]);
-
-        return [
-            'status' => 'ok',
-            'id'     => $conn->lastInsertId()
-        ];
-    }
-
-
 }

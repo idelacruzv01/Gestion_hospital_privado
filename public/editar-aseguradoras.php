@@ -88,8 +88,8 @@ $aseguradoras = $controller->listarAseguradoras();
             </table>
 
             <!-- Formulario oculto para nueva aseguradora -->
-            <div id="contenedor-form-nueva-aseguradora" class="form-nueva-aseguradora" style="display:none;">
-                <h4>Nuevo Aseguradora</h4>
+            <div id="contenedor-form-nueva-aseguradora" class="form-admin" style="display:none;">
+                <h4>Nueva Aseguradora</h4>
 
                 <form id="form-nueva-aseguradora" onsubmit="guardarAseguradora(event)">
                     <label>Nombre de aseguradora:</label>
@@ -122,28 +122,6 @@ $aseguradoras = $controller->listarAseguradoras();
                     </div>
                 </form>
             </div>
-
-            <!-- FORMULARIO PROTOCOLOS URGENCIAS -->
-            <form id="formProtocoloUrgencias" class="form-nueva-aseguradora" style="display:none;">
-                <input type="hidden" name="aseguradora_id" id="urgencias_aseguradora_id">
-
-                <label>Código general</label>
-                <input type="number" name="codigo_general">
-
-                <label>Código pediatría</label>
-                <input type="number" name="codigo_pediatria">
-
-                <label>Terminal</label>
-                <input type="text" name="terminal" required>
-
-                <label>Instrucciones</label>
-                <textarea name="instrucciones" required></textarea>
-
-                <button type="button" onclick="guardarProtocoloUrgencias()">
-                    Guardar y continuar
-                </button>
-            </form>
-
 
         </main>
 

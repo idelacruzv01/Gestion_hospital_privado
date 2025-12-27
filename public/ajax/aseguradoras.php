@@ -19,29 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode($respuesta);
             break;
 
-        case 'crear_protocolo_urgencias':
-            $respuesta = $controller->crearProtocoloUrgencias($_POST);
-            echo json_encode($respuesta);
-            break;
-
-
-        /*case 'eliminar':
-            $id = $_POST['id'] ?? null;
-            $respuesta = $controller->eliminarAseguradora($id);
-            echo json_encode($respuesta);
-            break;
-
-        case 'obtener':
-            $id = $_POST['id'] ?? null;
-            $respuesta = $controller->obtenerAseguradoraPorId($id);
-            echo json_encode($respuesta);
-            break;
-
-        case 'actualizar':
-            $respuesta = $controller->actualizarAseguradora($_POST);
-            echo json_encode($respuesta);
-            break;*/
-
         default:
             echo json_encode([
                 'status'  => 'error',

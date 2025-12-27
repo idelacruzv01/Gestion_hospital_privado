@@ -81,17 +81,4 @@ class AseguradoraController
         ];
     }
 
-    //SE AÑADEN LOS DATOS DEL PROTOCOLO DE URGENCIAS
-    public function crearProtocoloUrgencias($datos)
-    {
-        return $this->aseguradoraModel->insertarProtocoloUrgencias([
-            'aseguradora_id'   => $datos['aseguradora_id'],
-            'codigo_general'   => $datos['codigo_general'] ?: null,
-            'codigo_pediatria' => $datos['codigo_pediatria'] ?: null,
-            'terminal'         => $datos['terminal'],
-            'instrucciones'    => $datos['instrucciones']
-        ]);
-    }
-
-
 }

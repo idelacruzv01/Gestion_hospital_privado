@@ -90,7 +90,7 @@ if ($_SESSION['tipo'] !== 'admin') {
             </table>
 
             <!-- Formulario oculto para nuevo usuario -->
-            <div id="contenedor-form-nuevo-usuario" class="form-nueva-aseguradora" style="display:none;">
+            <div id="contenedor-form-nuevo-usuario" class="form-admin" style="display:none;">
                 <h4>Nuevo Usuario</h4>
 
                 <form id="form-nuevo-usuario" onsubmit="guardarUsuario(event)">
@@ -117,7 +117,7 @@ if ($_SESSION['tipo'] !== 'admin') {
             </div>
 
             <!--Formulario oculto para editar usuario -->
-            <div id="contenedor-form-editar-usuario" class="form-nueva-aseguradora" style="display:none;">
+            <div id="contenedor-form-editar-usuario" class="form-admin" style="display:none;">
                 <h4>Editar Usuario</h4>
 
                 <form id="form-editar-usuario" onsubmit="guardarCambiosUsuario(event)">

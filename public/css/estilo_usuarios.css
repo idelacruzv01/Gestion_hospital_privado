@@ -56,8 +56,7 @@
 }
 
 /* CONTENEDOR FORMULARIOS */
-#contenedor-form-nuevo-usuario,
-#contenedor-form-editar-usuario {
+.form-admin {
     width: 90%;
     max-width: 600px;
     margin: 2rem auto;
@@ -69,18 +68,15 @@
 }
 
 /* TÍTULO FORMULARIOS */
-#contenedor-form-nuevo-usuario h4,
-#contenedor-form-editar-usuario h4 {
+.form-admin h4 {
     text-align: center;
     margin-bottom: 1rem;
     color: var(--quiron-azul);
 }
 
 /* INPUTS FORMULARIO */
-#contenedor-form-nuevo-usuario input,
-#contenedor-form-nuevo-usuario select,
-#contenedor-form-editar-usuario input,
-#contenedor-form-editar-usuario select {
+.form-admin input,
+.form-admin select {
     width: 100%;
     padding: 0.6rem;
     margin-top: 0.3rem;
@@ -92,8 +88,7 @@
 }
 
 /* LABELS */
-#contenedor-form-nuevo-usuario label,
-#contenedor-form-editar-usuario label {
+.form-admin label {
     font-weight: bold;
     color: var(--quiron-azul);
 }
