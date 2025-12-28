@@ -3,11 +3,7 @@ require_once __DIR__ . '/../../controllers/AseguradoraController.php';
 
 $controller = new AseguradoraController();
 
-/*
-|--------------------------------------------------------------------------
-| PETICIONES POST (CRUD)
-|--------------------------------------------------------------------------
-*/
+/*PETICIONES POST (CRUD)*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $accion = $_POST['accion'] ?? null;
@@ -16,6 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'crear':
             $respuesta = $controller->crearAseguradora();
+            echo json_encode($respuesta);
+            break;
+
+        case 'eliminar':
+            $id = $_POST['id'] ?? null;
+            $respuesta = $controller->eliminarAseguradora($id);
             echo json_encode($respuesta);
             break;
 
@@ -30,11 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| PETICIONES GET (búsqueda / filtrado)
-|--------------------------------------------------------------------------
-*/
+/*PETICIONES GET (búsqueda / filtrado)*/
+
 $buscar = $_GET['buscar'] ?? null;
 $tipo   = $_GET['tipo']   ?? null;
 

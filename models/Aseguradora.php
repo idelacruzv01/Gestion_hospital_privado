@@ -97,5 +97,15 @@ class Aseguradora {
             'id'     => $conn->lastInsertId()
         ];
     }
+    /*Eliminar aseguradora*/
+    public function eliminar($id) {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "DELETE FROM seguros_salud WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }   
 
 }

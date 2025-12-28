@@ -81,4 +81,32 @@ class AseguradoraController
         ];
     }
 
+    
+    // Eliminar aseguradora desde editar-aseguradoras.php
+    public function eliminarAseguradora($id)
+    {
+        // Validar que llega un ID correcto
+        if (!isset($id) || empty($id) || !is_numeric($id)) {
+            return [
+                'status' => 'error',
+                'mensaje' => 'ID de aseguradora no válido.'
+            ];
+        }
+
+        // Llamar al modelo
+        $resultado = $this->aseguradoraModel->eliminar($id);
+
+        if ($resultado) {
+            return [
+                'status' => 'ok',
+                'mensaje' => 'Aseguradora eliminada correctamente.'
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'mensaje' => 'No se pudo eliminar la aseguradora.'
+            ];
+        }
+    }
+
 }

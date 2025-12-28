@@ -37,3 +37,27 @@ function guardarAseguradora(event) {
         alert("Error de conexión");
     });
 }
+
+//Eliminar aseguradora
+function eliminarAseguradora(id) {
+    if (!confirm("¿Seguro que quieres eliminar esta aseguradora?")) return;
+
+    const datos = new FormData();
+    datos.append('accion', 'eliminar');
+    datos.append('id', id);
+
+    fetch("ajax/aseguradoras.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            alert("Aseguradora eliminada correctamente");
+            location.reload();
+        } else {
+            alert("Error: " + data.mensaje);
+        }
+    })
+    .catch(err => console.error("Error en AJAX:", err));
+}
