@@ -71,18 +71,22 @@ class Aseguradora {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /*Crear nueva aseguradora*/
+    //Crear una nueva aseguradora desde edtiar-aseguradoas.php
     public function crearAseguradora($datos)
-    {
-        $database = new Database();
-        $conn = $database->getConnection();
+{
+    $database = new Database();
+    $conn = $database->getConnection();
 
+    try {
+        // Iniciamos transacción
+        $conn->beginTransaction();
+
+        // Insert principal
         $sql = "INSERT INTO seguros_salud 
                 (nombre, telefono, horario, mail1, mail2, tipo_aseguradora_id)
                 VALUES (:nombre, :telefono, :horario, :mail1, :mail2, :tipo)";
 
         $stmt = $conn->prepare($sql);
-
         $stmt->execute([
             ':nombre'   => $datos['nombre'],
             ':telefono' => $datos['telefono'],
@@ -92,11 +96,85 @@ class Aseguradora {
             ':tipo'     => $datos['tipo']
         ]);
 
+        $aseguradoraId = $conn->lastInsertId();
+
+        if ($aseguradoraId <= 0) {
+            throw new Exception("No se generó ID de aseguradora");
+        }
+
+        /* INSERTS MANUALES TABLA A TABLA 
+
+        // 1. Antígenos
+        $sql = "INSERT INTO antigenos (aseguradora_id) VALUES (:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':id' => $aseguradoraId]);
+
+        // 2. Protocolos de urgencias
+        $sql = "INSERT INTO protocolos_urgencias (aseguradora_id) VALUES (:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':id' => $aseguradoraId]);
+
+        // 3. Ingresos
+        $sql = "INSERT INTO ingresos (aseguradora_id) VALUES (:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':id' => $aseguradoraId]);
+
+        // 4. TAC
+        $sql = "INSERT INTO tac (aseguradora_id) VALUES (:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':id' => $aseguradoraId]);
+
+        // 5. Traslado domicilio
+        $sql = "INSERT INTO traslado_domicilio (aseguradora_id) VALUES (:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':id' => $aseguradoraId]);
+
+        // 7. Traslado hospitalario
+        $sql = "INSERT INTO traslado_hospitalario (aseguradora_id) VALUES (:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':id' => $aseguradoraId]);
+*/        
+        // Inserts en tablas hijas (vacíos)
+        $tablasHijas = [
+            'antigenos',
+            'ingresos',
+            'protocolos_urgencias',
+            'tac',
+            'traslado_domicilio',
+            'traslado_hospitalario'
+        ];
+
+        foreach ($tablasHijas as $tabla) {
+            $sqlHija = "INSERT INTO {$tabla} (aseguradora_id) VALUES (:id)";
+            $stmtHija = $conn->prepare($sqlHija);
+            $stmtHija->execute([
+                    ':id' => $aseguradoraId
+                ]);
+        }
+
+        // Confirmamos todo
+        $conn->commit();
+
         return [
             'status' => 'ok',
-            'id'     => $conn->lastInsertId()
+            'id'     => $aseguradoraId
+        ];
+
+    } catch (Exception $e) {
+
+        // Si algo falla, deshacemos TODO
+        if ($conn->inTransaction()) {
+            $conn->rollBack();
+        }
+
+        // DEVOLVEMOS EL ERROR REAL (clave para depurar)
+        return [
+            'status'  => 'error',
+            'mensaje' => $e->getMessage()
         ];
     }
+}
+
     /*Eliminar aseguradora*/
     public function eliminar($id) {
         $database = new Database();
