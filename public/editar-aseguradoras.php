@@ -13,7 +13,7 @@ $aseguradoras = $controller->listarAseguradoras();
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Buscador de Telefonos</title>
+        <title>Editar Aseguradoras</title>
         <link rel="stylesheet" href="css/estilo_menu.css">
         <link rel="stylesheet" href="css/estilo_urgencias.css">
         <link rel="stylesheet" href="css/estilo_usuarios.css">
@@ -122,6 +122,14 @@ $aseguradoras = $controller->listarAseguradoras();
                     </div>
                 </form>
             </div>
+
+            <!-- Contenedor para la edición específica de una aseguradora -->
+            <div id="editar-aseguradora" class="menu-section" style="display:none;">
+                </div>
+
+            <!-- Contenedor para la edición de aseguradora -->
+            <div id="contenedor-edicion" class="form-admin" style="display:none;"></div>
+
 
         </main>
 

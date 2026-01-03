@@ -21,6 +21,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode($respuesta);
             break;
 
+        case 'editar_aseguradora':
+            $id = $_POST['id'] ?? null;
+            $controller->editarAseguradora($id);
+            break;
+
+        case 'editar_traslado_domicilio':
+            $id = $_POST['id'] ?? null;
+            $controller->editarTrasladoDomicilio($id);
+            break;
+
+        case 'guardarTrasladoDomicilio':
+            $id = $_POST['aseguradora_id'] ?? null;
+            $respuesta = $controller->guardarTrasladoDomicilio($_POST);
+            echo json_encode($respuesta);
+            break;
+
         default:
             echo json_encode([
                 'status'  => 'error',
@@ -48,3 +64,5 @@ if ($tipo) {
 }
 
 echo "<p style='text-align:center; color:red;'>No se especificó tipo ni búsqueda.</p>";
+
+

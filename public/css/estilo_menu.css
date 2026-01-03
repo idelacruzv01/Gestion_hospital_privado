@@ -193,3 +193,13 @@ footer {
     color: var(--quiron-azul);
     font-weight: bold;
 }
+
+/* Estilo para el grid de los botones de edición */
+.menu-edicion {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
+}

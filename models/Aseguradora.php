@@ -186,4 +186,62 @@ class Aseguradora {
         return $stmt->execute();
     }   
 
+    //Obtener datos de una aseguradora por su ID
+    public function obtenerPorId($id) {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "SELECT *
+                FROM seguros_salud
+                WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    //Obtener los datos de traslado a domicilio de una aseguradora
+    public function obtenerTrasladoDomicilio($id)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "SELECT *
+                FROM traslado_domicilio
+                WHERE aseguradora_id = :id";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    //UPDATE traslado a domicilio
+    public function guardarTrasladoDomicilio($datos)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "UPDATE traslado_domicilio
+                SET telefono_traslados = :telefono,
+                    email_traslados = :email,
+                    instrucciones = :instrucciones
+                WHERE aseguradora_id = :id";
+
+        $stmt = $conn->prepare($sql);
+
+        // Ejecutamos asegurándonos de que todas las claves existan
+        $exito = $stmt->execute([
+            ':telefono'      => $datos['telefono_traslados'] ?? '',
+            ':email'         => $datos['email_traslados'] ?? '',
+            ':instrucciones' => $datos['instrucciones'] ?? '',
+            ':id'            => $datos['id'] ?? 0 // nunca vacío
+        ]);
+
+        return ['ok' => (bool)$exito];
+    }
+
+
 }

@@ -109,4 +109,71 @@ class AseguradoraController
         }
     }
 
+    // Editar aseguradora desde editar-aseguradoras.php
+    public function editarAseguradora($id)
+    {
+        // Validar que llega un ID correcto
+        if (!isset($id) || empty($id) || !is_numeric($id)) {
+            return [
+                'status' => 'error',
+                'mensaje' => 'ID de aseguradora no válido.'
+            ];
+        }
+
+        // Redirigir a la vista de edición con los datos actuales
+        $aseguradora = $this->aseguradoraModel->obtenerPorId($id);  
+        if (!$aseguradora) {
+            return [
+                'status' => 'error',
+                'mensaje' => 'Aseguradora no encontrada.'
+            ];
+        }
+        require __DIR__ . '/../views/editar_aseguradora.php';
+
+    }
+
+    //Editar traslado a domicilio desde editar-aseguradoras.php
+    public function editarTrasladoDomicilio($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+
+        $datos = $this->aseguradoraModel->obtenerTrasladoDomicilio($id);
+
+        if (!$datos) {
+            echo "<p>No hay datos de traslado domicilio</p>";
+            return;
+        }
+
+        require __DIR__ . '/../views/edicion/editar_traslado_domicilio.php';
+    }
+
+    //Guardar traslado a domicilio desde editar-aseguradoras.php
+    public function guardarTrasladoDomicilio($data)
+    {
+        // Validar que llega ID de aseguradora
+        if (empty($data['aseguradora_id'])) {
+            return [
+                'ok' => false,
+                'error' => 'ID de aseguradora no recibido'
+            ];
+        }
+
+        // Mapear datos para que el modelo reciba las claves correctas
+        $traslado = [
+            'id' => (int)$data['aseguradora_id'], // obligatorio para WHERE
+            'telefono_traslados' => $data['telefono_traslados'] ?? '',
+            'email_traslados'    => $data['email_traslados'] ?? '',
+            'instrucciones'      => $data['instrucciones'] ?? ''
+        ];
+
+        // Llamada al modelo
+        $resultado = $this->aseguradoraModel->guardarTrasladoDomicilio($traslado);
+
+        // Devolver resultado
+        return $resultado;
+    }
+
 }
