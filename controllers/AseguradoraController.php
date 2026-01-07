@@ -195,7 +195,6 @@ class AseguradoraController
                 'horario'  => 'horario',
                 'mail1'   => 'mail1',
                 'mail2'   => 'mail2',
-                'horario'  => 'horario'
             ]
         );
     }

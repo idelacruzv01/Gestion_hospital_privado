@@ -66,14 +66,6 @@ class Aseguradora {
     }
 
     //-----GESTIÓN DE ASEGURADORAS DESDE editar-aseguradoras.php-----//
-    //Listar todas las aseguradoras en editar-aseguradoras.php
-    public static function listar(): array
-    {
-        $db = new Database();
-        $conn = $db->getConnection();
-        $stmt = $conn->query("SELECT id, nombre, tipo_aseguradora_id AS tipo, creado_por, creado_en, modificado_por, modificado_en FROM seguros_salud ORDER BY nombre");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     // Crear una nueva aseguradora desde editar-aseguradoras.php
     public function crearAseguradora($datos)
@@ -248,11 +240,15 @@ class Aseguradora {
         $database = new Database();
         $conn = $database->getConnection();
 
-        // --- AUDITORÍA ---
-        $campos['modificado_por'] = $_SESSION['usuario'] ?? 'desconocido';
-        $campos['modificado_en']  = date('Y-m-d H:i:s');
+        // Datos de auditoría
+        $usuario = $_SESSION['usuario'] ?? 'desconocido';
+        $fecha   = date('Y-m-d H:i:s');
 
-        $sets = [];
+        // Añadir auditoría a la tabla hija
+        $campos['modificado_por'] = $usuario;
+        $campos['modificado_en']  = $fecha;
+
+        $sets   = [];
         $params = [];
 
         foreach ($campos as $columna => $valor) {
@@ -262,11 +258,32 @@ class Aseguradora {
 
         $params[':id'] = $aseguradoraId;
 
-        $sql = "UPDATE {$tabla} SET " . implode(', ', $sets) . " WHERE aseguradora_id = :id";
+        // UPDATE tabla hija
+        $sql = "UPDATE {$tabla}
+                SET " . implode(', ', $sets) . "
+                WHERE aseguradora_id = :id";
 
         $stmt = $conn->prepare($sql);
-        return $stmt->execute($params);
+        $ok = $stmt->execute($params);
+
+        if ($ok) {
+            // Propagar auditoría a la tabla madre
+            $sqlPadre = "UPDATE seguros_salud
+                        SET modificado_por = :usuario,
+                            modificado_en  = :fecha
+                        WHERE id = :id";
+
+            $stmtPadre = $conn->prepare($sqlPadre);
+            $stmtPadre->execute([
+                ':usuario' => $usuario,
+                ':fecha'   => $fecha,
+                ':id'      => $aseguradoraId
+            ]);
+        }
+
+        return $ok;
     }
+
 
     
 

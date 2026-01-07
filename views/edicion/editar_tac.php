@@ -2,7 +2,7 @@
 
 <form id="form-tac" onsubmit="guardarTac(event, <?= $datos['aseguradora_id'] ?>)">  
 
-    s<label>Precisa Autorización</label>
+    <label>Precisa Autorización</label>
     <select name="precisa_autorizacion">
         <option value="sí" <?= (isset($datos['precisa_autorizacion']) && $datos['precisa_autorizacion'] === 'sí') ? 'selected' : '' ?>>Sí</option>
         <option value="no" <?= (isset($datos['precisa_autorizacion']) && $datos['precisa_autorizacion'] === 'no') ? 'selected' : '' ?>>No</option>
