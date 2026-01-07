@@ -35,6 +35,6 @@
     <label>TAC con Contraste</label>
     <textarea name="tac_con_contraste"><?= htmlspecialchars($datos['tac_con_contraste'] ?? '') ?></textarea>
 
-    <button type="submit" class="btn-menu">Guardar</button>
-    <button type="button" class="btn-volver" onclick="volverMenuEdicion()">Cancelar</button>
+    <button type="submit" class="boton-accion boton-editar">Guardar</button>
+    <button type="button" class="boton-accion boton-borrar" onclick="volverListado()">Cancelar</button>
 </form>

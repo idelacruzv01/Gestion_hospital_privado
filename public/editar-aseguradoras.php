@@ -62,6 +62,10 @@ $aseguradoras = $controller->listarAseguradoras();
                     <tr>
                         <th>ID</th>
                         <th>Nombre de la Aseguradora</th>
+                        <th>Creado Por</th>
+                        <th>Creado En</th>
+                        <th>Modificado Por</th>
+                        <th>Modificado En</th>
                         <th>Acciones</th>
                         
                     </tr>
@@ -72,6 +76,10 @@ $aseguradoras = $controller->listarAseguradoras();
                         <tr>
                             <td><?= htmlspecialchars($a['id']) ?></td>
                             <td><?= htmlspecialchars($a['nombre']) ?></td>
+                            <td><?= htmlspecialchars($a['creado_por'] ?? '-') ?></td>
+                            <td><?= htmlspecialchars($a['creado_en'] ?? '-') ?></td>
+                            <td><?= htmlspecialchars($a['modificado_por'] ?? '-') ?></td>
+                            <td><?= htmlspecialchars($a['modificado_en'] ?? '-') ?></td>
                             <td>
                                 <button class="boton-accion boton-editar" onclick="editarAseguradora(<?= (int)$a['id'] ?>)">✏️ Editar</button>
                                 <button class="boton-accion boton-borrar" onclick="eliminarAseguradora(<?= (int)$a['id'] ?>)">🗑️ Eliminar</button>

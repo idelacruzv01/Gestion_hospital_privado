@@ -103,6 +103,36 @@ function mostrarEdicion(html) {
     contenedor.innerHTML = html;
 }
 
+function volverListado() {
+    // Oculta el contenedor de edición
+    const contenedorEdicion = document.getElementById('contenedor-edicion');
+    if (contenedorEdicion) {
+        contenedorEdicion.style.display = 'none';
+        contenedorEdicion.innerHTML = ''; // limpiar contenido
+    }
+
+    // Oculta el contenedor extra de edición si existe
+    const editarAseguradora = document.getElementById('editar-aseguradora');
+    if (editarAseguradora) {
+        editarAseguradora.style.display = 'none';
+        editarAseguradora.innerHTML = '';
+    }
+
+    // Muestra la tabla de aseguradoras
+    const tablaAseguradoras = document.getElementById('tabla-aseguradoras');
+    if (tablaAseguradoras) {
+        tablaAseguradoras.style.display = 'table'; // es tabla, no div
+    }
+
+    // Muestra el botón de agregar nueva aseguradora
+    const accionesUsuarios = document.querySelector('.acciones-usuarios');
+    if (accionesUsuarios) {
+        accionesUsuarios.style.display = '';
+    }
+}
+
+
+
 //Función generica para editar cada opción
 function editarSeccion(accion, id) {
     const datos = new FormData();

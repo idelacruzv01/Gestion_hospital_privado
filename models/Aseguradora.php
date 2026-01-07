@@ -8,7 +8,7 @@ class Aseguradora {
         $database = new Database();
         $conn = $database->getConnection();
 
-        $sql = "SELECT id, nombre
+        $sql = "SELECT id, nombre, creado_por, creado_en, modificado_por, modificado_en
                 FROM seguros_salud
                 ORDER BY nombre ASC";
         $stmt = $conn->prepare($sql);
@@ -71,11 +71,11 @@ class Aseguradora {
     {
         $db = new Database();
         $conn = $db->getConnection();
-        $stmt = $conn->query("SELECT id, nombre, tipo_aseguradora_id AS tipo FROM seguros_salud ORDER BY nombre");
+        $stmt = $conn->query("SELECT id, nombre, tipo_aseguradora_id AS tipo, creado_por, creado_en, modificado_por, modificado_en FROM seguros_salud ORDER BY nombre");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    //Crear una nueva aseguradora desde edtiar-aseguradoas.php
+    // Crear una nueva aseguradora desde editar-aseguradoras.php
     public function crearAseguradora($datos)
     {
         $database = new Database();
@@ -85,19 +85,21 @@ class Aseguradora {
             // Iniciamos transacción
             $conn->beginTransaction();
 
-            // Insert principal
+            // Insert principal en seguros_salud
             $sql = "INSERT INTO seguros_salud 
-                    (nombre, telefono, horario, mail1, mail2, tipo_aseguradora_id)
-                    VALUES (:nombre, :telefono, :horario, :mail1, :mail2, :tipo)";
+                    (nombre, telefono, horario, mail1, mail2, tipo_aseguradora_id, creado_por, creado_en)
+                    VALUES (:nombre, :telefono, :horario, :mail1, :mail2, :tipo, :creado_por, :creado_en)";
 
             $stmt = $conn->prepare($sql);
             $stmt->execute([
-                ':nombre'   => $datos['nombre'],
-                ':telefono' => $datos['telefono'],
-                ':horario'  => $datos['horario'],
-                ':mail1'    => $datos['mail1'],
-                ':mail2'    => $datos['mail2'],
-                ':tipo'     => $datos['tipo']
+                ':nombre'     => $datos['nombre'],
+                ':telefono'   => $datos['telefono'],
+                ':horario'    => $datos['horario'],
+                ':mail1'      => $datos['mail1'],
+                ':mail2'      => $datos['mail2'],
+                ':tipo'       => $datos['tipo'],
+                ':creado_por' => $_SESSION['usuario'] ?? 'desconocido', 
+                ':creado_en'  => date('Y-m-d H:i:s')
             ]);
 
             $aseguradoraId = $conn->lastInsertId();
@@ -105,8 +107,8 @@ class Aseguradora {
             if ($aseguradoraId <= 0) {
                 throw new Exception("No se generó ID de aseguradora");
             }
-   
-            // Inserts en tablas hijas (vacíos)
+
+            // Inserts en tablas hijas (vacíos), incluyendo creado_por y creado_en
             $tablasHijas = [
                 'antigenos',
                 'ingresos',
@@ -117,11 +119,14 @@ class Aseguradora {
             ];
 
             foreach ($tablasHijas as $tabla) {
-                $sqlHija = "INSERT INTO {$tabla} (aseguradora_id) VALUES (:id)";
+                $sqlHija = "INSERT INTO {$tabla} (aseguradora_id, creado_por, creado_en)
+                            VALUES (:id, :creado_por, :creado_en)";
                 $stmtHija = $conn->prepare($sqlHija);
                 $stmtHija->execute([
-                        ':id' => $aseguradoraId
-                    ]);
+                    ':id'          => $aseguradoraId,
+                    ':creado_por'  => $_SESSION['usuario'] ?? 'desconocido',
+                    ':creado_en'   => date('Y-m-d H:i:s')
+                ]);
             }
 
             // Confirmamos todo
@@ -139,13 +144,14 @@ class Aseguradora {
                 $conn->rollBack();
             }
 
-            // DEVOLVEMOS EL ERROR REAL (clave para depurar)
+            // Devolvemos el error real para depuración
             return [
                 'status'  => 'error',
                 'mensaje' => $e->getMessage()
             ];
         }
     }
+
 
     //Eliminar aseguradora
     public function eliminar($id) {
@@ -241,6 +247,10 @@ class Aseguradora {
 
         $database = new Database();
         $conn = $database->getConnection();
+
+        // --- AUDITORÍA ---
+        $campos['modificado_por'] = $_SESSION['usuario'] ?? 'desconocido';
+        $campos['modificado_en']  = date('Y-m-d H:i:s');
 
         $sets = [];
         $params = [];

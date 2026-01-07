@@ -69,7 +69,9 @@ class AseguradoraController
             'horario'  => trim($_POST['horario']),
             'mail1'    => trim($_POST['mail1']),
             'mail2'    => trim($_POST['mail2']),
-            'tipo'     => (int) $_POST['tipo']
+            'tipo'     => (int) $_POST['tipo'],
+            'creado_por'    => $_SESSION['usuario'] ?? 'desconocido',
+            'creado_en'     => date('Y-m-d H:i:s')
         ];
 
         $resultado = $this->aseguradoraModel->crearAseguradora($datos); 
@@ -152,6 +154,10 @@ class AseguradoraController
         foreach ($mapping as $origen => $destino) {
             $payload[$destino] = $data[$origen] ?? null;
         }
+
+        // Añadir auditoría automáticamente
+        $payload['modificado_por'] = $_SESSION['usuario'] ?? 'desconocido';
+        $payload['modificado_en']  = date('Y-m-d H:i:s');
 
         $ok = $modelCallback($payload, $aseguradoraId);
 

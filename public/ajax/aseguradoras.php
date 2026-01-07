@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../controllers/AseguradoraController.php';
+require_once __DIR__ . '/../../core/verificar_sesion.php';
 
 $controller = new AseguradoraController();
 
@@ -11,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($accion) {
 
         case 'crear':
+            // Aseguramos que creado_por y creado_en se registren correctamente
+            $_POST['creado_por'] = $_SESSION['usuario'];
+            $_POST['creado_en'] = date('Y-m-d H:i:s');
+
             $respuesta = $controller->crearAseguradora();
             echo json_encode($respuesta);
             break;
