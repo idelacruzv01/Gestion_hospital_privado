@@ -3,6 +3,7 @@ require_once __DIR__ . '/../core/Database.php';
 
 class Aseguradora {
 
+    //-----OBTENER ASEGURADORAS-----//
     public static function obtenerTodas() {
         $database = new Database();
         $conn = $database->getConnection();
@@ -16,29 +17,30 @@ class Aseguradora {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //-----OBTENER ASEGURADORAS POR TIPO-----//
     public static function obtenerPorTipo($tipo) {
-    $tiposValidos = ['salud', 'accidentes', 'mutuas', 'privados', 'internacional', 'trafico'];
+        $tiposValidos = ['salud', 'accidentes', 'mutuas', 'privados', 'internacional', 'trafico'];
 
-    if (!in_array($tipo, $tiposValidos)) {
-        throw new Exception('Tipo de aseguradora no válido');
+        if (!in_array($tipo, $tiposValidos)) {
+            throw new Exception('Tipo de aseguradora no válido');
+        }
+
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "SELECT s.id, s.nombre, s.logo
+                FROM seguros_salud s
+                JOIN tipos_aseguradora t ON s.tipo_aseguradora_id = t.id
+                WHERE t.nombre = :tipo
+                ORDER BY s.nombre ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    $database = new Database();
-    $conn = $database->getConnection();
-
-    $sql = "SELECT s.id, s.nombre, s.logo
-            FROM seguros_salud s
-            JOIN tipos_aseguradora t ON s.tipo_aseguradora_id = t.id
-            WHERE t.nombre = :tipo
-            ORDER BY s.nombre ASC";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-// Nuevo método para buscar por nombre (mínimo 3 letras)
+    //-----BUSCAR ASEGURADORAS POR NOMBRE-----//
     public static function buscarPorNombre($texto) {
         $texto = trim($texto);
         if (strlen($texto) < 3) {
@@ -63,6 +65,8 @@ class Aseguradora {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //-----GESTIÓN DE ASEGURADORAS DESDE editar-aseguradoras.php-----//
+    //Listar todas las aseguradoras en editar-aseguradoras.php
     public static function listar(): array
     {
         $db = new Database();
@@ -73,109 +77,77 @@ class Aseguradora {
 
     //Crear una nueva aseguradora desde edtiar-aseguradoas.php
     public function crearAseguradora($datos)
-{
-    $database = new Database();
-    $conn = $database->getConnection();
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
 
-    try {
-        // Iniciamos transacción
-        $conn->beginTransaction();
+        try {
+            // Iniciamos transacción
+            $conn->beginTransaction();
 
-        // Insert principal
-        $sql = "INSERT INTO seguros_salud 
-                (nombre, telefono, horario, mail1, mail2, tipo_aseguradora_id)
-                VALUES (:nombre, :telefono, :horario, :mail1, :mail2, :tipo)";
+            // Insert principal
+            $sql = "INSERT INTO seguros_salud 
+                    (nombre, telefono, horario, mail1, mail2, tipo_aseguradora_id)
+                    VALUES (:nombre, :telefono, :horario, :mail1, :mail2, :tipo)";
 
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            ':nombre'   => $datos['nombre'],
-            ':telefono' => $datos['telefono'],
-            ':horario'  => $datos['horario'],
-            ':mail1'    => $datos['mail1'],
-            ':mail2'    => $datos['mail2'],
-            ':tipo'     => $datos['tipo']
-        ]);
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                ':nombre'   => $datos['nombre'],
+                ':telefono' => $datos['telefono'],
+                ':horario'  => $datos['horario'],
+                ':mail1'    => $datos['mail1'],
+                ':mail2'    => $datos['mail2'],
+                ':tipo'     => $datos['tipo']
+            ]);
 
-        $aseguradoraId = $conn->lastInsertId();
+            $aseguradoraId = $conn->lastInsertId();
 
-        if ($aseguradoraId <= 0) {
-            throw new Exception("No se generó ID de aseguradora");
+            if ($aseguradoraId <= 0) {
+                throw new Exception("No se generó ID de aseguradora");
+            }
+   
+            // Inserts en tablas hijas (vacíos)
+            $tablasHijas = [
+                'antigenos',
+                'ingresos',
+                'protocolos_urgencias',
+                'tac',
+                'traslado_domicilio',
+                'traslado_hospitalario'
+            ];
+
+            foreach ($tablasHijas as $tabla) {
+                $sqlHija = "INSERT INTO {$tabla} (aseguradora_id) VALUES (:id)";
+                $stmtHija = $conn->prepare($sqlHija);
+                $stmtHija->execute([
+                        ':id' => $aseguradoraId
+                    ]);
+            }
+
+            // Confirmamos todo
+            $conn->commit();
+
+            return [
+                'status' => 'ok',
+                'id'     => $aseguradoraId
+            ];
+
+        } catch (Exception $e) {
+
+            // Si algo falla, deshacemos TODO
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
+
+            // DEVOLVEMOS EL ERROR REAL (clave para depurar)
+            return [
+                'status'  => 'error',
+                'mensaje' => $e->getMessage()
+            ];
         }
-
-        /* INSERTS MANUALES TABLA A TABLA 
-
-        // 1. Antígenos
-        $sql = "INSERT INTO antigenos (aseguradora_id) VALUES (:id)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':id' => $aseguradoraId]);
-
-        // 2. Protocolos de urgencias
-        $sql = "INSERT INTO protocolos_urgencias (aseguradora_id) VALUES (:id)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':id' => $aseguradoraId]);
-
-        // 3. Ingresos
-        $sql = "INSERT INTO ingresos (aseguradora_id) VALUES (:id)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':id' => $aseguradoraId]);
-
-        // 4. TAC
-        $sql = "INSERT INTO tac (aseguradora_id) VALUES (:id)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':id' => $aseguradoraId]);
-
-        // 5. Traslado domicilio
-        $sql = "INSERT INTO traslado_domicilio (aseguradora_id) VALUES (:id)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':id' => $aseguradoraId]);
-
-        // 7. Traslado hospitalario
-        $sql = "INSERT INTO traslado_hospitalario (aseguradora_id) VALUES (:id)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':id' => $aseguradoraId]);
-*/        
-        // Inserts en tablas hijas (vacíos)
-        $tablasHijas = [
-            'antigenos',
-            'ingresos',
-            'protocolos_urgencias',
-            'tac',
-            'traslado_domicilio',
-            'traslado_hospitalario'
-        ];
-
-        foreach ($tablasHijas as $tabla) {
-            $sqlHija = "INSERT INTO {$tabla} (aseguradora_id) VALUES (:id)";
-            $stmtHija = $conn->prepare($sqlHija);
-            $stmtHija->execute([
-                    ':id' => $aseguradoraId
-                ]);
-        }
-
-        // Confirmamos todo
-        $conn->commit();
-
-        return [
-            'status' => 'ok',
-            'id'     => $aseguradoraId
-        ];
-
-    } catch (Exception $e) {
-
-        // Si algo falla, deshacemos TODO
-        if ($conn->inTransaction()) {
-            $conn->rollBack();
-        }
-
-        // DEVOLVEMOS EL ERROR REAL (clave para depurar)
-        return [
-            'status'  => 'error',
-            'mensaje' => $e->getMessage()
-        ];
     }
-}
 
-    /*Eliminar aseguradora*/
+    //Eliminar aseguradora
     public function eliminar($id) {
         $database = new Database();
         $conn = $database->getConnection();
@@ -201,47 +173,208 @@ class Aseguradora {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    //Obtener los datos de traslado a domicilio de una aseguradora
-    public function obtenerTrasladoDomicilio($id)
+    //FUNCION GENÉRICA PARA OBTENER DATOS DE LAS DISTINTAS SECCIONES DE EDICIÓN
+    private function obtenerPorAseguradora(string $tabla, int $id): ?array
+    {
+        if ($id <= 0) {
+            return null;
+        }
+
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sql = "SELECT * FROM {$tabla} WHERE aseguradora_id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    //FUNCIONES ESPECIFICAS PARA CADA SECCIÓN DE EDICIÓN
+    public function obtenerContacto($id)
     {
         $database = new Database();
         $conn = $database->getConnection();
 
-        $sql = "SELECT *
-                FROM traslado_domicilio
-                WHERE aseguradora_id = :id";
-
+        $sql = "SELECT * FROM seguros_salud WHERE id = :id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    //UPDATE traslado a domicilio
-    public function guardarTrasladoDomicilio($datos)
+    public  function obtenerUrgencias($id)
     {
+        return $this->obtenerPorAseguradora('protocolos_urgencias', $id);
+    }
+    public  function obtenerAntigenos($id)
+    {
+        return $this->obtenerPorAseguradora('antigenos', $id);
+    }
+    public  function obtenerIngresos($id)
+    {
+        return $this->obtenerPorAseguradora('ingresos', $id);
+    }
+    public  function obtenerTAC($id)
+    {
+        return $this->obtenerPorAseguradora('tac', $id);
+    }
+    public  function obtenerTrasladoDomicilio($id)
+    {
+        return $this->obtenerPorAseguradora('traslado_domicilio', $id);
+    }
+    public  function obtenerTrasladoOtroCentro($id)
+    {
+        return $this->obtenerPorAseguradora('traslado_hospitalario', $id);
+    }
+
+    //FUNCION GENERICA PARA GUARDAR DATOS DE LAS DISTINTAS SECCIONES DE EDICIÓN
+    private function updatePorAseguradora(
+        string $tabla,
+        array $campos,
+        int $aseguradoraId
+    ): bool {
+        if ($aseguradoraId <= 0 || empty($campos)) {
+            return false;
+        }
+
         $database = new Database();
         $conn = $database->getConnection();
 
-        $sql = "UPDATE traslado_domicilio
-                SET telefono_traslados = :telefono,
-                    email_traslados = :email,
-                    instrucciones = :instrucciones
-                WHERE aseguradora_id = :id";
+        $sets = [];
+        $params = [];
+
+        foreach ($campos as $columna => $valor) {
+            $sets[] = "{$columna} = :{$columna}";
+            $params[":{$columna}"] = $valor;
+        }
+
+        $params[':id'] = $aseguradoraId;
+
+        $sql = "UPDATE {$tabla} SET " . implode(', ', $sets) . " WHERE aseguradora_id = :id";
 
         $stmt = $conn->prepare($sql);
+        return $stmt->execute($params);
+    }
 
-        // Ejecutamos asegurándonos de que todas las claves existan
-        $exito = $stmt->execute([
-            ':telefono'      => $datos['telefono_traslados'] ?? '',
-            ':email'         => $datos['email_traslados'] ?? '',
-            ':instrucciones' => $datos['instrucciones'] ?? '',
-            ':id'            => $datos['id'] ?? 0 // nunca vacío
-        ]);
+    
 
-        return ['ok' => (bool)$exito];
+    //FUNCIONES ESPECIFICAS PARA GUARDAR CADA SECCIÓN DE EDICIÓN
+
+    public function guardarContacto(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'telefono' => $datos['telefono'] ?? null,
+            'horario'  => $datos['horario'] ?? null,
+            'mail1'    => $datos['mail1'] ?? null,
+            'mail2'    => $datos['mail2'] ?? null
+        ];
+
+        if ($aseguradoraId <= 0 || empty($campos)) {
+            return false;
+        }
+
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        $sets = [];
+        $params = [];
+
+        foreach ($campos as $columna => $valor) {
+            $sets[] = "{$columna} = :{$columna}";
+            $params[":{$columna}"] = $valor;
+        }
+
+        $params[':id'] = $aseguradoraId;
+
+        $sql = "UPDATE seguros_salud 
+                SET " . implode(', ', $sets) . " 
+                WHERE id = :id";
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute($params);
     }
 
 
+    public function guardarUrgencias(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'codigo_general'   => $datos['codigo_general'] ?? null,
+            'codigo_pediatria' => $datos['codigo_pediatria'] ?? null,
+            'terminal'         => $datos['terminal'] ?? null,
+            'instrucciones'    => $datos['instrucciones'] ?? null
+        ];
+
+        return $this->updatePorAseguradora(
+            'protocolos_urgencias',
+            $campos,
+            $aseguradoraId
+        );
+    }
+
+    public function guardarAntigenos(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'precisa_autorizacion' => $datos['precisa_autorizacion'] ?? null,
+            'codigo_aut'           => $datos['codigo_aut'] ?? null,
+            'instrucciones'        => $datos['instrucciones'] ?? null
+        ];
+
+        return $this->updatePorAseguradora(
+            'antigenos',
+            $campos,
+            $aseguradoraId
+        );
+    }
+
+    public function guardarIngresos(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'autorizable_por_terminal' => $datos['autorizable_por_terminal'] ?? null,
+            'autorizable_por_telefono' => $datos['autorizable_por_telefono'] ?? null,
+            'telefono_autorizaciones'  => $datos['telefono_autorizaciones'] ?? null,
+            'email_autorizaciones'     => $datos['email_autorizaciones'] ?? null,
+            'instrucciones'            => $datos['instrucciones'] ?? null
+        ];
+
+        return $this->updatePorAseguradora('ingresos', $campos, $aseguradoraId);
+    }
+
+    public function guardarTac(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'precisa_autorizacion'     => $datos['precisa_autorizacion'] ?? null,
+            'autorizable_por_terminal' => $datos['autorizable_por_terminal'] ?? null,
+            'autorizable_por_telefono' => $datos['autorizable_por_telefono'] ?? null,
+            'telefono_autorizaciones'  => $datos['telefono_autorizaciones'] ?? null,
+            'email_autorizaciones'     => $datos['email_autorizaciones'] ?? null,
+            'instrucciones'            => $datos['instrucciones'] ?? null,
+            'tac_doble'                => $datos['tac_doble'] ?? null,
+            'tac_con_contraste'        => $datos['tac_con_contraste'] ?? null
+        ];
+
+        return $this->updatePorAseguradora('tac', $campos, $aseguradoraId);
+    }
+
+    public function guardarTrasladoDomicilio(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'telefono_traslados' => $datos['telefono_traslados'] ?? null,
+            'email_traslados'    => $datos['email_traslados'] ?? null,
+            'instrucciones'      => $datos['instrucciones'] ?? null
+        ];
+
+        return $this->updatePorAseguradora('traslado_domicilio', $campos, $aseguradoraId);
+    }
+    public function guardarTrasladoHospitalario(array $datos, int $aseguradoraId): bool
+    {
+        $campos = [
+            'telefono_traslados' => $datos['telefono_traslados'] ?? null,
+            'email_traslados'    => $datos['email_traslados'] ?? null,
+            'instrucciones'      => $datos['instrucciones'] ?? null
+        ];
+
+        return $this->updatePorAseguradora('traslado_hospitalario', $campos, $aseguradoraId);
+    }
 }

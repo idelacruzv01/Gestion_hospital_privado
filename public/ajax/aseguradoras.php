@@ -26,13 +26,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $controller->editarAseguradora($id);
             break;
 
-        case 'editar_traslado_domicilio':
+        case 'editarContacto':
+            $id = $_POST['id'] ?? null;
+            $controller->editarContacto($id);
+            break;
+        case 'guardarContacto':
+            $respuesta = $controller->guardarContacto($_POST);
+            echo json_encode($respuesta);
+            break;
+
+        case 'editarUrgencias':
+            $id = $_POST['id'] ?? null;
+            $controller->editarUrgencias($id);
+            break;
+        case 'guardarUrgencias':
+            $respuesta = $controller->guardarUrgencias($_POST);
+            echo json_encode($respuesta);;
+            break;
+
+        case 'editarAntigenos':
+            $id = $_POST['id'] ?? null;
+            $controller->editarAntigenos($id);
+            break;
+        case 'guardarAntigenos':
+            $respuesta = $controller->guardarAntigenos($_POST);
+            echo json_encode($respuesta);
+            break;
+
+        case 'editarIngresos':
+            $id = $_POST['id'] ?? null;
+            $controller->editarIngresos($id);
+            break;
+        case 'guardarIngresos':
+            $respuesta = $controller->guardarIngresos($_POST);
+            echo json_encode($respuesta);
+            break;
+
+        case 'editarTAC':
+            $id = $_POST['id'] ?? null;
+            $controller->editarTAC($id);
+            break;
+        case 'guardarTac':
+            $respuesta = $controller->guardarTac($_POST);
+            echo json_encode($respuesta);
+            break;
+
+        case 'editarTrasladoOtroCentro':
+            $id = $_POST['id'] ?? null;
+            $controller->editarTrasladoOtroCentro($id);
+            break;
+        case 'guardarTrasladoHospitalario':
+            $respuesta = $controller->guardarTrasladoHospitalario($_POST);
+            echo json_encode($respuesta);
+            break;
+
+        case 'editarTrasladoDomicilio':
             $id = $_POST['id'] ?? null;
             $controller->editarTrasladoDomicilio($id);
             break;
-
         case 'guardarTrasladoDomicilio':
-            $id = $_POST['aseguradora_id'] ?? null;
             $respuesta = $controller->guardarTrasladoDomicilio($_POST);
             echo json_encode($respuesta);
             break;

@@ -46,10 +46,6 @@ $aseguradoras = $controller->listarAseguradoras();
 
             <h1>Editar Aseguradoras</h1>
 
-            <section class="buscador">
-                <input type="text" id="buscarAseguradora" placeholder="Buscar aseguradora...">
-            </section>
-
             <section id="resultado" class="resultado">
                 <!-- Aquí se mostrarán los resultados -->
             </section>
@@ -67,6 +63,7 @@ $aseguradoras = $controller->listarAseguradoras();
                         <th>ID</th>
                         <th>Nombre de la Aseguradora</th>
                         <th>Acciones</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -79,6 +76,7 @@ $aseguradoras = $controller->listarAseguradoras();
                                 <button class="boton-accion boton-editar" onclick="editarAseguradora(<?= (int)$a['id'] ?>)">✏️ Editar</button>
                                 <button class="boton-accion boton-borrar" onclick="eliminarAseguradora(<?= (int)$a['id'] ?>)">🗑️ Eliminar</button>
                             </td>
+                            
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

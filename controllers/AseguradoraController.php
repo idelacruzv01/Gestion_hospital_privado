@@ -9,6 +9,7 @@ class AseguradoraController
         $this->aseguradoraModel = new Aseguradora();
     }
 
+    //-----VISTAS DE ASEGURADORAS-----//
     public function mostrarAseguradorasPorTipo($tipo)
     {
         $tipo = trim($tipo);
@@ -22,6 +23,7 @@ class AseguradoraController
         require __DIR__ . '/../views/aseguradoras_por_tipo.php';
     }
 
+    //-----BÚSQUEDA DE ASEGURADORAS-----//
     public function buscarAseguradoras($texto)
     {
         $texto = trim($texto);
@@ -41,7 +43,8 @@ class AseguradoraController
         require __DIR__ . '/../views/aseguradoras_busqueda.php';
     }
 
-    // Obtener lista de aseguradoras para editar-aseguradoras.php
+    //-----GESTIÓN DE ASEGURADORAS DESDE editar-aseguradoras.php-----//
+    //Listar todas las aseguradoras en editar-aseguradoras.php
     public function listarAseguradoras() {
         return $this->aseguradoraModel->obtenerTodas();
     }
@@ -119,7 +122,6 @@ class AseguradoraController
                 'mensaje' => 'ID de aseguradora no válido.'
             ];
         }
-
         // Redirigir a la vista de edición con los datos actuales
         $aseguradora = $this->aseguradoraModel->obtenerPorId($id);  
         if (!$aseguradora) {
@@ -129,51 +131,250 @@ class AseguradoraController
             ];
         }
         require __DIR__ . '/../views/editar_aseguradora.php';
-
     }
 
-    //Editar traslado a domicilio desde editar-aseguradoras.php
+    //EDITAR Y GUARDAR SECCIONES DE LA ASEGURADORA
+
+    //FUNCIÓN GENÉRICA PARA GUARDAR DATOS DE CUALQUIER SECCIÓN
+    private function guardarSeccion(
+        array $data,
+        callable $modelCallback,
+        array $mapping
+    ) {
+        if (empty($data['aseguradora_id']) || !is_numeric($data['aseguradora_id'])) {
+            return ['ok' => false, 'mensaje' => 'ID de aseguradora no válido'];
+        }
+
+        $aseguradoraId = (int)$data['aseguradora_id'];
+
+        $payload = [];
+
+        foreach ($mapping as $origen => $destino) {
+            $payload[$destino] = $data[$origen] ?? null;
+        }
+
+        $ok = $modelCallback($payload, $aseguradoraId);
+
+        return $ok
+            ? ['ok' => true]
+            : ['ok' => false, 'mensaje' => 'No se pudo guardar'];
+    }
+
+
+    //-----SECCIONES DE LA ASEGURADORA-----//
+
+    //-----CONTACTO-----//
+    //Editar CONTACTO desde editar-aseguradoras.php
+    public function editarContacto($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+        $datos = $this->aseguradoraModel->obtenerContacto($id);
+        if (!$datos) {
+            echo "<p>No hay datos de contacto</p>";
+            return;
+        }
+        require __DIR__ . '/../views/edicion/editar_contacto.php';
+    }
+    //Guardar CONTACTO desde editar-aseguradoras.php
+    public function guardarContacto($data)
+    {
+        return $this->guardarSeccion(
+            $data,
+            [$this->aseguradoraModel, 'guardarContacto'],
+            [
+                'telefono' => 'telefono',
+                'horario'  => 'horario',
+                'mail1'   => 'mail1',
+                'mail2'   => 'mail2',
+                'horario'  => 'horario'
+            ]
+        );
+    }
+
+    //-----URGÊNCIAS-----//
+    //Editar URGENCIAS desde editar-aseguradoras.php
+    public function editarUrgencias($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+        $datos = $this->aseguradoraModel->obtenerUrgencias($id);
+        if (!$datos) {
+            echo "<p>No hay datos de urgencias</p>";
+            return;
+        }
+        require __DIR__ . '/../views/edicion/editar_urgencias.php';
+    }
+    //Guardar URGENCIAS desde editar-aseguradoras.php
+    public function guardarUrgencias($data)
+    {
+        return $this->guardarSeccion(
+            $data,
+            [$this->aseguradoraModel, 'guardarUrgencias'],
+            [
+                'codigo_general'   => 'codigo_general',
+                'codigo_pediatria' => 'codigo_pediatria',
+                'terminal'         => 'terminal',
+                'instrucciones'    => 'instrucciones'
+            ]
+        );
+    }
+
+    //Editar ANTÍGENOS desde editar-aseguradoras.php
+    public function editarAntigenos($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+        $datos = $this->aseguradoraModel->obtenerAntigenos($id);
+        if (!$datos) {
+            echo "<p>No hay datos de antígenos</p>";
+            return;
+        }
+        require __DIR__ . '/../views/edicion/editar_antigenos.php';
+    }
+    //Guardar ANTÍGENOS desde editar-aseguradoras.php
+    public function guardarAntigenos($data)
+    {
+        return $this->guardarSeccion(
+            $data,
+            [$this->aseguradoraModel, 'guardarAntigenos'],
+            [
+                'precisa_autorizacion'     => 'precisa_autorizacion',
+                'codigo_aut'               => 'codigo_aut',
+                'instrucciones_antigenos'  => 'instrucciones'
+            ]
+        );
+    }
+
+    
+    //Editar INGRESOS desde editar-aseguradoras.php
+    public function editarIngresos($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+        $datos = $this->aseguradoraModel->obtenerIngresos($id);
+        if (!$datos) {
+            echo "<p>No hay datos de ingresos</p>";
+            return;
+        }
+        require __DIR__ . '/../views/edicion/editar_ingresos.php';
+    }
+    // Guardar INGRESOS desde editar-aseguradoras.php
+    public function guardarIngresos($data)
+    {
+        return $this->guardarSeccion(
+            $data,
+            [$this->aseguradoraModel, 'guardarIngresos'],
+            [
+                'autorizable_por_terminal' => 'autorizable_por_terminal',
+                'autorizable_por_telefono' => 'autorizable_por_telefono',
+                'telefono_autorizaciones'  => 'telefono_autorizaciones',
+                'email_autorizaciones'     => 'email_autorizaciones',
+                'instrucciones'   => 'instrucciones'
+            ]
+        );
+    }
+
+
+    //Editar TAC desde editar-aseguradoras.php
+    public function editarTAC($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+        $datos = $this->aseguradoraModel->obtenerTAC($id);
+        if (!$datos) {
+            echo "<p>No hay datos de TAC</p>";
+            return;
+        }
+        require __DIR__ . '/../views/edicion/editar_tac.php';
+    }
+    // Guardar TAC desde editar-aseguradoras.php
+public function guardarTac($data)
+{
+    return $this->guardarSeccion(
+        $data,
+        [$this->aseguradoraModel, 'guardarTac'],
+        [
+            'precisa_autorizacion'     => 'precisa_autorizacion',
+            'autorizable_por_terminal' => 'autorizable_por_terminal',
+            'autorizable_por_telefono' => 'autorizable_por_telefono',
+            'telefono_autorizaciones'  => 'telefono_autorizaciones',
+            'email_autorizaciones'     => 'email_autorizaciones',
+            'instrucciones'            => 'instrucciones',
+            'tac_doble'                => 'tac_doble',
+            'tac_con_contraste'        => 'tac_con_contraste'
+        ]
+    );
+}
+    
+
+    //Editar TRASLADO A DOMICILIO desde editar-aseguradoras.php
     public function editarTrasladoDomicilio($id)
     {
         if (!is_numeric($id)) {
             echo "<p>ID no válido</p>";
             return;
         }
-
         $datos = $this->aseguradoraModel->obtenerTrasladoDomicilio($id);
-
         if (!$datos) {
             echo "<p>No hay datos de traslado domicilio</p>";
             return;
         }
-
         require __DIR__ . '/../views/edicion/editar_traslado_domicilio.php';
     }
-
-    //Guardar traslado a domicilio desde editar-aseguradoras.php
+    //Guardar TRASLADO A DOMICILIO desde editar-aseguradoras.php
     public function guardarTrasladoDomicilio($data)
     {
-        // Validar que llega ID de aseguradora
-        if (empty($data['aseguradora_id'])) {
-            return [
-                'ok' => false,
-                'error' => 'ID de aseguradora no recibido'
-            ];
-        }
-
-        // Mapear datos para que el modelo reciba las claves correctas
-        $traslado = [
-            'id' => (int)$data['aseguradora_id'], // obligatorio para WHERE
-            'telefono_traslados' => $data['telefono_traslados'] ?? '',
-            'email_traslados'    => $data['email_traslados'] ?? '',
-            'instrucciones'      => $data['instrucciones'] ?? ''
-        ];
-
-        // Llamada al modelo
-        $resultado = $this->aseguradoraModel->guardarTrasladoDomicilio($traslado);
-
-        // Devolver resultado
-        return $resultado;
+        return $this->guardarSeccion(
+            $data,
+            [$this->aseguradoraModel, 'guardarTrasladoDomicilio'],
+            [
+                'telefono_traslados' => 'telefono_traslados',
+                'email_traslados'    => 'email_traslados',
+                'instrucciones'      => 'instrucciones'
+            ]
+        );
     }
+
+    //Editar TRASLADO A OTRO CENTRO desde editar-aseguradoras.php
+    public function editarTrasladoOtroCentro($id)
+    {
+        if (!is_numeric($id)) {
+            echo "<p>ID no válido</p>";
+            return;
+        }
+        $datos = $this->aseguradoraModel->obtenerTrasladoOtroCentro($id);
+        if (!$datos) {
+            echo "<p>No hay datos de traslado a otro centro</p>";
+            return;
+        }
+        require __DIR__ . '/../views/edicion/editar_traslado_otro_centro.php';
+    }   
+    //Guardar TRASLADO A OTRO CENTRO desde editar-aseguradoras.php
+    public function guardarTrasladoHospitalario($data)
+    {
+        return $this->guardarSeccion(
+            $data,
+            [$this->aseguradoraModel, 'guardarTrasladoHospitalario'],
+            [
+                'telefono_traslados' => 'telefono_traslados',
+                'email_traslados'    => 'email_traslados',
+                'instrucciones'      => 'instrucciones'
+            ]
+        );
+    }
+
+
+
 
 }

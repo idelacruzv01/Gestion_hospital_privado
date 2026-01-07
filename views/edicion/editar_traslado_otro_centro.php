@@ -1,6 +1,6 @@
-<h3>Editar Traslado Domicilio</h3>
+<h3>Editar Traslado a Otro Centro</h3>
 
-<form id="form-traslado-domicilio" onsubmit="guardarTrasladoDomicilio(event, <?= $datos['aseguradora_id'] ?>)">
+<form id="form-traslado-hospitalario" onsubmit="guardarTrasladoHospitalario(event, <?= $datos['aseguradora_id'] ?>)">
 
     <label>Teléfono Traslado</label>
     <input type="text" name="telefono_traslados" value="<?= htmlspecialchars($datos['telefono_traslados'] ?? '') ?>">
