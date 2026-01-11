@@ -27,7 +27,7 @@ if ($_SESSION['tipo'] !== 'admin') {
         <header class="encabezado">
             <div class="header-left">
                 <a href="administrar_usuarios.php" class="logo">
-                    <img src="img/logo_header/logo_quiron.png" alt="Logo Quirónsalud" class="logo-header">
+                    <img src="img/logo_header/logo_hospital_2.png" alt="Logo Quirónsalud" class="logo-header">
                 </a>
             </div>
 

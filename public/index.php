@@ -29,7 +29,7 @@
     
     <head>
         <meta charset="UTF-8">
-        <title>Login - Urgencias</title>
+        <title>Login - Hospital Privado</title>
         <link rel="stylesheet" href="css/estilo_login.css">
         <link href="https://fonts.googleapis.com/css2?family=Exo:wght@700&display=swap" rel="stylesheet">
     </head>
@@ -38,7 +38,7 @@
 
         <header class="main-header">
             <div class="logo-container">
-                <img src="img/logo_header/logo_quiron.png" alt="Logo Quirón" class="logo">
+                <img src="img/logo_header/logo_hospital_2.png" alt="Logo Hospital" class="logo">
             </div>
         </header>
 
@@ -46,7 +46,7 @@
         <h2>Admisión Toledo</h2>
         <h3>Inicia Sesión</h3>
 
-        
+        <!-- Mostrar mensajes de error o confirmación -->
         <?php if (isset($_GET['error'])): ?>
             <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
         <?php endif; ?>
@@ -54,7 +54,7 @@
             <p class="mensaje"><?php echo htmlspecialchars($_GET['mensaje']); ?></p>
         <?php endif; ?>
 
-
+        <!-- Formulario de inicio de sesión -->
         <form action="../controllers/LoginController.php" method="POST" autocomplete="off">
             <label for="usuario">Usuario</label>
             <input type="text" name="usuario" id="usuario" required autocomplete="off">

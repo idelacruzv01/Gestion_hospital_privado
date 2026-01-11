@@ -26,5 +26,5 @@
     <h2>8. Aceptación de la política</h2>
     <p>Al acceder a la aplicación, el usuario reconoce haber leído y aceptado esta Política de Privacidad y Confidencialidad, y se compromete a cumplir las normas de uso responsable establecidas por el hospital.</p>
 
-    <p><a href="index.php">⬅ Volver al inicio de sesión</a></p>
+    <p><a href="#" id="volver-login">⬅ Volver al inicio de sesión</a></p>
 

@@ -24,7 +24,7 @@ $aseguradoras = $controller->listarAseguradoras();
         <header class="encabezado">
             <div class="header-left">
                 <a href="editar-aseguradoras.php" class="logo">
-                    <img src="img/logo_header/logo_quiron.png" alt="Logo Quirónsalud" class="logo-header">
+                    <img src="img/logo_header/logo_hospital_2.png" alt="Logo Quirónsalud" class="logo-header">
                 </a>
             </div>
 
